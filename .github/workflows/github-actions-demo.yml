@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Copy artifact to Azure VM
-        uses: appleboy/scp-action@v0.1.7
+        uses: azure/scp-action@v2
         with:
           host: '135.235.137.133'
           username: 'github-pipeline'
