@@ -49,18 +49,24 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+      - name: Copy artifact to Azure VM
+        uses: appleboy/scp-action@v0.1.7
         with:
-          name: java-app
+          host: '135.235.137.133'
+          username: 'github-pipeline'
+          key: 'github-pipeline@135.235.137.133'
+          source: target/*.jar
+          target: /home/github-pipeline/app/
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
+      - name: Run Java App on Azure VM
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '*.jar'
+          host: '135.235.137.133'
+          username: 'github-pipeline'
+          key: 'github-pipeline@135.235.137.133'
+          script: |
+            pkill -f 'java -jar' || true  # stop previous instance
+            nohup java -jar /home/${{ secrets.AZURE_VM_USERNAME }}/app/your-app-name.jar > app.log 2>&1 &          
 
 #name: GitHub Actions Demo
 #run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
