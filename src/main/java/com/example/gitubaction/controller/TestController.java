@@ -8,6 +8,6 @@ public class TestController {
 
     @GetMapping("/api/github-pipeline")
     public String testController(){
-        return "hello-github-pipeline"
+        return "hello-github-pipeline";
     }
 }
