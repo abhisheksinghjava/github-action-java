@@ -19,7 +19,7 @@ on:
       - develop
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,47 +35,24 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/github-action-pipeline-0.0.1-SNAPSHOT.jar'
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-#      - name: Upload JAR
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: java-app
-#          path: '${{ github.workspace }}/target/github-action-pipeline-0.0.1-SNAPSHOT.jar'
-#      - name: Copy artifact to Azure VM
-#        uses: appleboy/scp-action@master
-#        with:
-#          host: '135.235.137.133'
-#          username: 'github-pipeline'
-#          password: 'github@#$123'
-#          source: "."
-#          target: '/home/github-pipeline/'
-      - name: Run Java App on Azure VM
-        uses: appleboy/scp-action@master
+      - name: Upload JAR to Azure VM
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: '135.235.137.133'
           username: 'github-pipeline'
           password: 'github@#$123'
-          source: "."
-          target: '/home/github-pipeline/'
-          script: |
-            pkill -f 'java -jar' || true  # stop previous instance
-            nohup java -jar /home/github-pipeline/github-action-pipeline-0.0.1-SNAPSHOT.jar > app.log 2>&1 &          
+          source: "target/*.jar"
+          target: "~/app/"
 
+      - name: Run JAR on Azure VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: '135.235.137.133'
+          username: 'github-pipeline'
+          password: 'github@#$123'
+          script: |
+            pkill -f 'java -jar' || true
+            nohup java -jar ~/app/*.jar > ~/app/app.log 2>&1 &
 #name: GitHub Actions Demo
 #run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 #on:
