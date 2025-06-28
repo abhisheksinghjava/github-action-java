@@ -51,14 +51,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Copy artifact to Azure VM
-        uses: appleboy/scp-action@master
+      - name: Upload JAR
+        uses: actions/download-artifact@v4
         with:
-          host: '135.235.137.133'
-          username: 'github-pipeline'
-          password: 'github@#$123'
-          source: "."
-          target: '/home/github-pipeline/'
+          name: java-app
+          path: '${{ github.workspace }}/target/*.jar'
+#      - name: Copy artifact to Azure VM
+#        uses: appleboy/scp-action@master
+#        with:
+#          host: '135.235.137.133'
+#          username: 'github-pipeline'
+#          password: 'github@#$123'
+#          source: "."
+#          target: '/home/github-pipeline/'
       - name: Run Java App on Azure VM
         uses: appleboy/scp-action@master
         with:
