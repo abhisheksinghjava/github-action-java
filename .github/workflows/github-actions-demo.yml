@@ -51,8 +51,6 @@ jobs:
           username: 'github-pipeline'
           password: 'github@#$123'
           script: |
-            pkill -f 'java -jar' || true
-            mkdir -p ~/app/logs
-            cd ~/app
-            nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > logs/app.log 2>&1 &
-            disown
+            sudo systemctl stop myapp || true
+            sudo systemctl start myapp
+            sudo systemctl status myapp --no-pager
