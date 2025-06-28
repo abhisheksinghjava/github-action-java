@@ -65,13 +65,13 @@ jobs:
 #          source: "."
 #          target: '/home/github-pipeline/'
       - name: Run Java App on Azure VM
-        uses: appleboy/scp-action@master
+#        uses: appleboy/scp-action@master
         with:
-          host: '135.235.137.133'
-          username: 'github-pipeline'
-          password: 'github@#$123'
-          source: "."
-          target: '/home/github-pipeline/'
+#          host: '135.235.137.133'
+#          username: 'github-pipeline'
+#          password: 'github@#$123'
+#          source: "."
+#          target: '/home/github-pipeline/'
           script: |
             pkill -f 'java -jar' || true  # stop previous instance
             nohup java -jar /home/github-pipeline/github-action-pipeline-0.0.1-SNAPSHOT.jar > app.log 2>&1 &          
