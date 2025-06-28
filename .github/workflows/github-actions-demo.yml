@@ -74,7 +74,7 @@ jobs:
           target: '/home/github-pipeline/'
           script: |
             pkill -f 'java -jar' || true  # stop previous instance
-            nohup java -jar /home/github-pipeline/app/java-app.jar > app.log 2>&1 &          
+            nohup java -jar /home/github-pipeline/github-action-pipeline-0.0.1-SNAPSHOT.jar > app.log 2>&1 &          
 
 #name: GitHub Actions Demo
 #run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
