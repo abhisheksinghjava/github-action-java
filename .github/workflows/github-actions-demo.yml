@@ -52,4 +52,5 @@ jobs:
           password: 'github@#$123'
           script: |
             pkill -f 'java -jar' || true
-            nohup java -jar ~/app/github-action-pipeline-0.0.1-SNAPSHOT.jar > ~/app/app.log 2>&1 &
+            cd ~/app/target/
+            nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > ~/app/app.log 2>&1 &
