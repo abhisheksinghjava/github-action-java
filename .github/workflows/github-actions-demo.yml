@@ -56,4 +56,3 @@ jobs:
             mkdir -p ~/app/logs
             cd ~/app
             nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > logs/app.log 2>&1 &
-            disown
