@@ -54,5 +54,5 @@ jobs:
           password: ${{ secrets.AZURE_VM_PASSWORD }}
           script: |
             mkdir -p ~/app/logs
-            cd ~/app
+            cd ~/app/target
             nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > logs/app.log 2>&1 &
