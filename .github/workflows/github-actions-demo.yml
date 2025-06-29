@@ -53,6 +53,6 @@ jobs:
           key: ${{ secrets.AZURE_VM_KEY }}
           password: ${{ secrets.AZURE_VM_PASSWORD }}
           script: |
-            mkdir -p ~/app/logs
+            kill -9 $(lsof -t -i:8083)
             cd ~/app/target
             nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
