@@ -53,7 +53,6 @@ jobs:
           key: ${{ secrets.AZURE_VM_KEY }}
           password: ${{ secrets.AZURE_VM_PASSWORD }}
           script: |
-            pkill -f 'java -jar' || true
             mkdir -p ~/app/logs
             cd ~/app
             nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > logs/app.log 2>&1 &
