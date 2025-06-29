@@ -41,6 +41,7 @@ jobs:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_VM_KEY }}
+          password: ${{ secrets.AZURE_VM_PASSWORD }}
           source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
           target: "~/app/"
 
@@ -50,6 +51,7 @@ jobs:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_VM_KEY }}
+          password: ${{ secrets.AZURE_VM_PASSWORD }}
           script: |
             pkill -f 'java -jar' || true
             mkdir -p ~/app/logs
