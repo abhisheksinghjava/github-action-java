@@ -44,7 +44,7 @@ jobs:
           source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
           target: "~/app/"
 
-      - name: Run JAR on Azure VM
+      - name: Run JAR on Azure-VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.AZURE_VM_IP }}
