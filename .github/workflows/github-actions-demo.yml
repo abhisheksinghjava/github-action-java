@@ -38,18 +38,18 @@ jobs:
       - name: Upload JAR to Azure VM
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: '135.235.137.133'
-          username: 'github-pipeline'
-          password: 'github@#$123'
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_VM_KEY }}
           source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
           target: "~/app/"
 
       - name: Run JAR on Azure VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: '135.235.137.133'
-          username: 'github-pipeline'
-          password: 'github@#$123'
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_VM_KEY }}
           script: |
             pkill -f 'java -jar' || true
             mkdir -p ~/app/logs
