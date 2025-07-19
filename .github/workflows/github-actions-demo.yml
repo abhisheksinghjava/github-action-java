@@ -1,20 +1,56 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Build and deploy JAR app to Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: MY_WEBAPP_NAME   # set this to your application's name
+  JAVA_VERSION: '11'                  # set this to the Java version to use
+
 on:
   pull_request:
-    branches: [develop]
+    branches:
+      - develop
+
 jobs:
-  Explore-GitHub-Actions:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - uses: actions/checkout@v4
+
+      - name: Set up Java version
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Upload JAR to Azure VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          password: ${{ secrets.AZURE_VM_PASSWORD }}
+          source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
+          target: "~/app/"
+
+      - name: Run JAR on Azure-VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          password: ${{ secrets.AZURE_VM_PASSWORD }}
+          script: |
+            kill -9 $(lsof -t -i:8083)
+            cd ~/app/target
+            nohup java -jar github-action-pipeline-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
