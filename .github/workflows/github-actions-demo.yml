@@ -35,7 +35,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Upload JAR to Azure VM
+      - name: Upload JAR to AWS VM
         uses: appleboy/scp-action@v0.1.7
         with:
           #host: ${{ secrets.AZURE_VM_IP }}
@@ -43,7 +43,7 @@ jobs:
           #password: ${{ secrets.AZURE_VM_PASSWORD }}
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER  }}
-          password: ${{ secrets.EC2_SSH_KEY  }}
+          key: ${{ secrets.EC2_SSH_KEY  }}
           source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
           target: "~/app/"
 
