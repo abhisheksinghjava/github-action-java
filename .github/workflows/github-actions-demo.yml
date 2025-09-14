@@ -47,12 +47,15 @@ jobs:
           source: "target/github-action-pipeline-0.0.1-SNAPSHOT.jar"
           target: "~/app/"
 
-      - name: Run JAR on Azure-VM
+      - name: Run JAR on AWS-VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.AZURE_VM_IP }}
-          username: ${{ secrets.AZURE_VM_USER }}
-          password: ${{ secrets.AZURE_VM_PASSWORD }}
+          #host: ${{ secrets.AZURE_VM_IP }}
+          #username: ${{ secrets.AZURE_VM_USER }}
+          #password: ${{ secrets.AZURE_VM_PASSWORD }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER  }}
+          key: ${{ secrets.EC2_SSH_KEY  }}
           script: |
             kill -9 $(lsof -t -i:8083)
             cd ~/app/target
